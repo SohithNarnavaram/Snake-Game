@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-board">
+        <div id="snake"></div>
+        <div id="food"></div>
+    </div>
+    <div id="score-box">Score: <span id="score">0</span></div>
+    <div id="highScore">Highest Score: <span id="highScoreValue"></span></div>
+    <div id="buttons">
+        <button id="startButton">Start Game</button>
+        <button id="restartButton" style="display:none;">Restart Game</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+const snake = document.getElementById('snake');
+const food = document.getElementById('food');
+const gameBoard = document.getElementById('game-board');
+const startButton = document.getElementById('startButton');
+const restartButton = document.getElementById('restartButton');
+const scoreDisplay = document.getElementById('score');
+const highScoreDisplay = document.getElementById('highScoreValue');
+
+let snakeX = 10;
+let snakeY = 10;
+let foodX = 5;
+let foodY = 5;
+let xVelocity = 0;
+let yVelocity = 0;
+let score = 0;
+let gameRunning = false;
+const GRID_SIZE = 20;
+const GAME_SIZE = 20;
+let intervalId;
+const INITIAL_SPEED = 150; // Initial speed of the snake
+let speed = INITIAL_SPEED;
+let highestScore = localStorage.getItem('highestScore') || 0;
+
+function startGame() {
+    gameRunning = true;
+    startButton.style.display = 'none';
+    restartButton.style.display = 'block';
+    intervalId = setInterval(update, speed);
+}
+
+function update() {
+    if (!gameRunning) return;
+
+    snakeX += xVelocity;
+    snakeY += yVelocity;
+
+    if (snakeX < 0 || snakeX >= GAME_SIZE || snakeY < 0 || snakeY >= GAME_SIZE) {
+        gameOver();
+        return;
+    }
+
+    if (snakeX === foodX && snakeY === foodY) {
+        score++;
+        scoreDisplay.textContent = score;
+        if (score > highestScore) {
+            highestScore = score;
+            localStorage.setItem('highestScore', highestScore);
+            highScoreDisplay.textContent = highestScore;
+        }
+        foodX = Math.floor(Math.random() * GAME_SIZE);
+        foodY = Math.floor(Math.random() * GAME_SIZE);
+        increaseSpeed(); // Increase speed when the snake eats food
+    }
+
+    snake.style.left = snakeX * GRID_SIZE + 'px';
+    snake.style.top = snakeY * GRID_SIZE + 'px';
+
+    food.style.left = foodX * GRID_SIZE + 'px';
+    food.style.top = foodY * GRID_SIZE + 'px';
+}
+
+function increaseSpeed() {
+    clearInterval(intervalId); // Clear the previous interval
+    speed -= 5; // Increase speed by reducing interval time
+    intervalId = setInterval(update, speed);
+}
+
+function gameOver() {
+    gameRunning = false;
+    startButton.style.display = 'block';
+    restartButton.style.display = 'block'; // Display restart button after game over
+    resetGame();
+}
+
+function resetGame() {
+    clearInterval(intervalId);
+    snakeX = 10;
+    snakeY = 10;
+    foodX = 5;
+    foodY = 5;
+    xVelocity = 0;
+    yVelocity = 0;
+    score = 0;
+    scoreDisplay.textContent = score;
+    speed = INITIAL_SPEED;
+}
+
+window.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'ArrowUp':
+        case 'w':
+            if (yVelocity !== 1) {
+                xVelocity = 0;
+                yVelocity = -1;
+            }
+            break;
+        case 'ArrowDown':
+        case 's':
+            if (yVelocity !== -1) {
+                xVelocity = 0;
+                yVelocity = 1;
+            }
+            break;
+        case 'ArrowLeft':
+        case 'a':
+            if (xVelocity !== 1) {
+                xVelocity = -1;
+                yVelocity = 0;
+            }
+            break;
+        case 'ArrowRight':
+        case 'd':
+            if (xVelocity !== -1) {
+                xVelocity = 1;
+                yVelocity = 0;
+            }
+            break;
+    }
+});
+
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', () => {
+    resetGame();
+    startGame();
+});
+
+// Display the highest score
+highScoreDisplay.textContent = highestScore;
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+#game-board {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border: 5px solid #333;
+    border-radius: 10px;
+}
+
+#snake, #food {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+}
+
+#snake {
+    background-color: #ff0000;
+}
+
+#score-box, #highScore {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+#score-box {
+    margin-bottom: 10px;
+}
+
+#buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#highScore {
+    margin-top: 10px;
+}
+
+//OLD PLAIN CSS
+body {
+    font-family: Arial, sans-serif;
+}
+
+#game-board {
+    width: 400px;
+    height: 400px;
+    background-color: #ccc;
+    border: 5px solid #333;
+    border-radius: 10px;
+}
+
+#snake, #food {
+    width: 20px;
+    height: 20px;
+    background-color: #4CAF50;
+}
+
+#snake {
+    background-color: #ff0000;
+}

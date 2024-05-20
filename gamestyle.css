@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+h1 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-style: italic;
+    color: blueviolet;
+}
+body {
+    background-image: url('snakebg.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%; /* Adjust the percentage to reduce the size */
+    background-position: right center; /* Adjust to position the snake image */
+}
+
+
+img {
+    display: block;
+    margin-left: auto;
+  }
+
+#game-board {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    border: 5px solid #333;
+    border-radius: 10px;
+}
+
+#snake, #food {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #f00;
+    border-radius: 50%;
+}
+
+#snake {
+    background-color: #4CAF50;
+}
+
+#score-box, #highScore {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+#score-box {
+    margin-bottom: 10px;
+}
+
+#buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#highScore {
+    margin-top: 10px;
+}
